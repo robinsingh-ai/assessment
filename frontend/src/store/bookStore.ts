@@ -1,57 +1,88 @@
 import { create } from 'zustand';
-import  Book  from '../types';
+import { Book } from '../types';
+import { BookAPI } from '../services/api';
 
 interface BookState {
   books: Book[];
-  addBook: (book: Omit<Book, 'id'>) => void;
-  updateBook: (id: string, updatedBook: Omit<Book, 'id'>) => void;
-  deleteBook: (id: string) => void;
+  loading: boolean;
+  error: string | null;
+  
+  // Actions
+  fetchBooks: () => Promise<void>;
+  addBook: (book: Omit<Book, 'id'>) => Promise<void>;
+  updateBook: (id: string, updatedBook: Omit<Book, 'id'>) => Promise<void>;
+  deleteBook: (id: string) => Promise<void>;
   getBook: (id: string) => Book | undefined;
 }
 
-// Initial sample data
-const initialBooks: Book[] = [
-  {
-    id: '1',
-    title: 'To Kill a Mockingbird',
-    author: 'Harper Lee',
-    yearPublished: 1960,
-    genre: 'Fiction'
-  },
-  {
-    id: '2',
-    title: '1984',
-    author: 'George Orwell',
-    yearPublished: 1949,
-    genre: 'Dystopian'
-  },
-  {
-    id: '3',
-    title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
-    yearPublished: 1925,
-    genre: 'Classic'
-  }
-];
-
 export const useBookStore = create<BookState>((set, get) => ({
-  books: initialBooks,
+  books: [],
+  loading: false,
+  error: null,
   
-  addBook: (book) => set((state) => {
-    const newId = Date.now().toString();
-    const newBook: Book = { ...book, id: newId };
-    return { books: [...state.books, newBook] };
-  }),
+  fetchBooks: async () => {
+    set({ loading: true, error: null });
+    try {
+      const books = await BookAPI.getAllBooks();
+      set({ books, loading: false });
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'Unknown error fetching books', 
+        loading: false 
+      });
+    }
+  },
   
-  updateBook: (id, updatedBook) => set((state) => ({
-    books: state.books.map(book => 
-      book.id === id ? { ...updatedBook, id } : book
-    )
-  })),
+  addBook: async (book) => {
+    set({ loading: true, error: null });
+    try {
+      const newBook = await BookAPI.createBook(book);
+      set((state) => ({ 
+        books: [...state.books, newBook], 
+        loading: false 
+      }));
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'Unknown error adding book', 
+        loading: false 
+      });
+      throw error;
+    }
+  },
   
-  deleteBook: (id) => set((state) => ({
-    books: state.books.filter(book => book.id !== id)
-  })),
+  updateBook: async (id, updatedBook) => {
+    set({ loading: true, error: null });
+    try {
+      const book = await BookAPI.updateBook(id, updatedBook);
+      set((state) => ({
+        books: state.books.map(b => b.id === id ? book : b),
+        loading: false
+      }));
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : `Unknown error updating book ${id}`, 
+        loading: false 
+      });
+      throw error;
+    }
+  },
+  
+  deleteBook: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      await BookAPI.deleteBook(id);
+      set((state) => ({
+        books: state.books.filter(book => book.id !== id),
+        loading: false
+      }));
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : `Unknown error deleting book ${id}`, 
+        loading: false 
+      });
+      throw error;
+    }
+  },
   
   getBook: (id) => {
     return get().books.find(book => book.id === id);
