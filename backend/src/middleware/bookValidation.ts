@@ -6,30 +6,6 @@ import { DbManager } from '../utils/dbManager';
 const dbManager = DbManager.getInstance();
 
 /**
- * Validates ISBN format
- * @param isbn ISBN string to validate
- * @returns true if valid, false otherwise
- */
-const isValidISBN = (isbn: string): boolean => {
-  // Remove hyphens and spaces
-  const cleanedISBN = isbn.replace(/[-\s]/g, '');
-  
-  // Check if it's a 13-digit number
-  if (!/^\d{13}$/.test(cleanedISBN)) {
-    return false;
-  }
-  
-  // ISBN-13 check digit validation
-  let sum = 0;
-  for (let i = 0; i < 12; i++) {
-    sum += parseInt(cleanedISBN[i]) * (i % 2 === 0 ? 1 : 3);
-  }
-  
-  const checkDigit = (10 - (sum % 10)) % 10;
-  return checkDigit === parseInt(cleanedISBN[12]);
-};
-
-/**
  * Validates book data for creation and updates
  */
 export const validateBookData = (req: Request, res: Response, next: NextFunction) => {
@@ -39,14 +15,6 @@ export const validateBookData = (req: Request, res: Response, next: NextFunction
     // Validate ISBN
     if (!isbn || typeof isbn !== 'string') {
       throw new ApiError(400, 'ISBN is required and must be a string');
-    }
-    
-    // Clean the ISBN (remove hyphens and spaces)
-    const cleanedISBN = isbn.replace(/[-\s]/g, '');
-    req.body.isbn = cleanedISBN; // Replace with cleaned version
-    
-    if (!isValidISBN(cleanedISBN)) {
-      throw new ApiError(400, 'Invalid ISBN-13 format');
     }
     
     // Check required fields
