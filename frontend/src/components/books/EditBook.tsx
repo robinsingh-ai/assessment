@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Book } from '../../types';
 import { useBookStore } from '../../store/bookStore';
+import PageContainer from '../layout/PageContainer';
+import FormContainer from '../forms/FormContainer';
+import InputField from '../forms/InputField';
+import FormActions from '../forms/FormActions';
 import './EditBook.css';
 
 const EditBook: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { getBook, updateBook } = useBookStore();
   
   const [bookData, setBookData] = useState<Book>({
@@ -28,12 +33,12 @@ const EditBook: React.FC = () => {
         setBookData(book);
       } else {
         alert('Book not found');
-        window.location.href = '/';
+        navigate('/');
       }
     }
     
     setLoading(false);
-  }, [id, getBook]);
+  }, [id, getBook, navigate]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof Omit<Book, 'id'>, string>> = {};
@@ -77,9 +82,12 @@ const EditBook: React.FC = () => {
         yearPublished: bookData.yearPublished,
         genre: bookData.genre
       });
-      // After editing, redirect to home page
-      window.location.href = '/';
+      navigate('/');
     }
+  };
+
+  const handleCancel = () => {
+    navigate('/');
   };
 
   if (loading) {
@@ -87,65 +95,57 @@ const EditBook: React.FC = () => {
   }
 
   return (
-    <div className="edit-book-container">
-      <h1>Edit Book</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={bookData.title}
-            onChange={handleChange}
-          />
-          {errors.title && <span className="error">{errors.title}</span>}
-        </div>
+    <PageContainer title="Edit Book">
+      <FormContainer onSubmit={handleSubmit}>
+        <InputField
+          id="title"
+          name="title"
+          label="Title"
+          value={bookData.title}
+          onChange={handleChange}
+          error={errors.title}
+          required
+        />
 
-        <div className="form-group">
-          <label htmlFor="author">Author</label>
-          <input
-            type="text"
-            id="author"
-            name="author"
-            value={bookData.author}
-            onChange={handleChange}
-          />
-          {errors.author && <span className="error">{errors.author}</span>}
-        </div>
+        <InputField
+          id="author"
+          name="author"
+          label="Author"
+          value={bookData.author}
+          onChange={handleChange}
+          error={errors.author}
+          required
+        />
 
-        <div className="form-group">
-          <label htmlFor="yearPublished">Year Published</label>
-          <input
-            type="number"
-            id="yearPublished"
-            name="yearPublished"
-            value={bookData.yearPublished}
-            onChange={handleChange}
-            min="1000"
-            max={new Date().getFullYear()}
-          />
-          {errors.yearPublished && <span className="error">{errors.yearPublished}</span>}
-        </div>
+        <InputField
+          id="yearPublished"
+          name="yearPublished"
+          label="Year Published"
+          value={bookData.yearPublished}
+          onChange={handleChange}
+          type="number"
+          min={1000}
+          max={new Date().getFullYear()}
+          error={errors.yearPublished}
+          required
+        />
 
-        <div className="form-group">
-          <label htmlFor="genre">Genre</label>
-          <input
-            type="text"
-            id="genre"
-            name="genre"
-            value={bookData.genre}
-            onChange={handleChange}
-          />
-          {errors.genre && <span className="error">{errors.genre}</span>}
-        </div>
+        <InputField
+          id="genre"
+          name="genre"
+          label="Genre"
+          value={bookData.genre}
+          onChange={handleChange}
+          error={errors.genre}
+          required
+        />
 
-        <div className="form-actions">
-          <button type="button" onClick={() => window.location.href = '/'}>Cancel</button>
-          <button type="submit">Update Book</button>
-        </div>
-      </form>
-    </div>
+        <FormActions
+          onCancel={handleCancel}
+          submitText="Update Book"
+        />
+      </FormContainer>
+    </PageContainer>
   );
 };
 
