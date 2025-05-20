@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Book } from '../types';
+import  Book  from '../types';
 
 interface BookState {
   books: Book[];
