@@ -1,59 +1,50 @@
-import { Book, books } from '../models/Book';
+import { Book } from '../models/Book';
+import { DbManager } from '../utils/dbManager';
 
-// Class to handle business logic for books
+/**
+ * Service for book operations
+ * Uses DbManager singleton for data persistence
+ */
 export class BookService {
-  // Get all books
+  private db: DbManager;
+  
+  constructor() {
+    // Get the singleton instance of DbManager
+    this.db = DbManager.getInstance();
+  }
+
+  /**
+   * Get all books
+   */
   getAllBooks(): Book[] {
-    return books;
+    return this.db.getAllBooks();
   }
 
-  // Get a book by id
+  /**
+   * Get a book by id
+   */
   getBookById(id: string): Book | undefined {
-    return books.find(book => book.id === id);
+    return this.db.getBookById(id);
   }
 
-  // Create a new book
+  /**
+   * Create a new book
+   */
   createBook(bookData: Omit<Book, 'id'>): Book {
-    const newBook: Book = {
-      ...bookData,
-      id: Date.now().toString()
-    };
-    
-    books.push(newBook);
-    return newBook;
+    return this.db.addBook(bookData);
   }
 
-  // Update a book
+  /**
+   * Update a book
+   */
   updateBook(id: string, bookData: Omit<Book, 'id'>): Book | null {
-    const bookIndex = books.findIndex(book => book.id === id);
-    
-    if (bookIndex === -1) {
-      return null;
-    }
-    
-    const updatedBook: Book = {
-      ...bookData,
-      id
-    };
-    
-    books[bookIndex] = updatedBook;
-    return updatedBook;
+    return this.db.updateBook(id, bookData);
   }
 
-  // Delete a book
+  /**
+   * Delete a book
+   */
   deleteBook(id: string): boolean {
-    const initialLength = books.length;
-    
-    const filteredBooks = books.filter(book => book.id !== id);
-    
-    // If the length is different, it means we removed a book
-    if (filteredBooks.length !== initialLength) {
-      // Replace the original array with the filtered one
-      books.length = 0;
-      books.push(...filteredBooks);
-      return true;
-    }
-    
-    return false;
+    return this.db.deleteBook(id);
   }
 } 

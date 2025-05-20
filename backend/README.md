@@ -7,7 +7,15 @@ A RESTful API for managing a library of books.
 - Node.js
 - Express
 - TypeScript
-- In-memory data store
+- JSON file-based persistence with Singleton pattern
+
+## Data Persistence
+
+The application uses a Singleton pattern for database operations. Data is stored in two places:
+1. In-memory for fast access
+2. In a JSON file (data/books.json) for persistence between server restarts
+
+Any changes made to the book collection (add, update, delete) are immediately saved to both the in-memory store and the JSON file.
 
 ## API Endpoints
 
@@ -25,6 +33,7 @@ src/
 ├── models/           # Data models and interfaces
 ├── routes/           # API routes
 ├── services/         # Business logic
+├── utils/            # Utility functions and classes (includes DbManager)
 └── server.ts         # Main application file
 ```
 
