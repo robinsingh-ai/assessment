@@ -11,10 +11,11 @@ import './EditBook.css';
 const EditBook: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getBook, updateBook } = useBookStore();
+  const { books, fetchBooks, updateBook } = useBookStore();
   
   const [bookData, setBookData] = useState<Book>({
     id: '',
+    isbn: '',
     title: '',
     author: '',
     yearPublished: new Date().getFullYear(),
@@ -23,25 +24,42 @@ const EditBook: React.FC = () => {
   
   const [errors, setErrors] = useState<Partial<Record<keyof Omit<Book, 'id'>, string>>>({});
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  // Fetch book data from store
+  // Fetch books if not already loaded
   useEffect(() => {
-    if (id) {
-      const book = getBook(id);
+    const loadData = async () => {
+      if (books.length === 0) {
+        await fetchBooks();
+      }
+      setLoading(false);
+    };
+    
+    loadData();
+  }, [books.length, fetchBooks]);
+
+  // Set book data when books are loaded or id changes
+  useEffect(() => {
+    if (!loading && id && books.length > 0) {
+      const book = books.find(book => book.id === id);
       
       if (book) {
         setBookData(book);
       } else {
-        alert('Book not found');
-        navigate('/');
+        setApiError('Book not found');
       }
     }
-    
-    setLoading(false);
-  }, [id, getBook, navigate]);
+  }, [id, books, loading]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof Omit<Book, 'id'>, string>> = {};
+    
+    // Validate ISBN (13 digits, can contain hyphens for input)
+    const cleanedISBN = bookData.isbn.replace(/[-\s]/g, '');
+    if (!cleanedISBN || !/^\d{13}$/.test(cleanedISBN)) {
+      newErrors.isbn = 'Please enter a valid 13-digit ISBN';
+    }
     
     if (!bookData.title.trim()) {
       newErrors.title = 'Title is required';
@@ -70,19 +88,38 @@ const EditBook: React.FC = () => {
       ...prev,
       [name]: name === 'yearPublished' ? parseInt(value, 10) : value
     }));
+    
+    // Clear API error when user makes changes
+    if (apiError) {
+      setApiError(null);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm() && id) {
-      updateBook(id, {
-        title: bookData.title,
-        author: bookData.author,
-        yearPublished: bookData.yearPublished,
-        genre: bookData.genre
-      });
-      navigate('/');
+      try {
+        setSaving(true);
+        setApiError(null);
+        
+        // Clean ISBN before submitting
+        const bookWithCleanISBN = {
+          isbn: bookData.isbn.replace(/[-\s]/g, ''),
+          title: bookData.title,
+          author: bookData.author,
+          yearPublished: bookData.yearPublished,
+          genre: bookData.genre
+        };
+        
+        await updateBook(id, bookWithCleanISBN);
+        navigate('/');
+      } catch (error) {
+        console.error('Error updating book:', error);
+        setApiError(error instanceof Error ? error.message : 'Failed to update book');
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
@@ -91,12 +128,38 @@ const EditBook: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading-container">Loading...</div>;
+  }
+
+  if (apiError && !bookData.id) {
+    return (
+      <div className="error-container">
+        <h2>Error</h2>
+        <p>{apiError}</p>
+        <button onClick={() => navigate('/')}>Back to Book List</button>
+      </div>
+    );
   }
 
   return (
     <PageContainer title="Edit Book">
       <FormContainer onSubmit={handleSubmit}>
+        {apiError && (
+          <div className="api-error-message">
+            {apiError}
+          </div>
+        )}
+        
+        <InputField
+          id="isbn"
+          name="isbn"
+          label="ISBN (13-digit)"
+          value={bookData.isbn}
+          onChange={handleChange}
+          error={errors.isbn}
+          required
+        />
+
         <InputField
           id="title"
           name="title"
@@ -142,7 +205,7 @@ const EditBook: React.FC = () => {
 
         <FormActions
           onCancel={handleCancel}
-          submitText="Update Book"
+          submitText={saving ? "Saving..." : "Update Book"}
         />
       </FormContainer>
     </PageContainer>

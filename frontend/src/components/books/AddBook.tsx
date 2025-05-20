@@ -11,8 +11,11 @@ import './AddBook.css';
 const AddBook: React.FC = () => {
   const navigate = useNavigate();
   const { addBook } = useBookStore();
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   
   const [bookData, setBookData] = useState<Omit<Book, 'id'>>({
+    isbn: '',
     title: '',
     author: '',
     yearPublished: new Date().getFullYear(),
@@ -23,6 +26,12 @@ const AddBook: React.FC = () => {
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof Omit<Book, 'id'>, string>> = {};
+    
+    // Validate ISBN (13 digits, can contain hyphens for input)
+    const cleanedISBN = bookData.isbn.replace(/[-\s]/g, '');
+    if (!cleanedISBN || !/^\d{13}$/.test(cleanedISBN)) {
+      newErrors.isbn = 'Please enter a valid 13-digit ISBN';
+    }
     
     if (!bookData.title.trim()) {
       newErrors.title = 'Title is required';
@@ -51,14 +60,35 @@ const AddBook: React.FC = () => {
       ...prev,
       [name]: name === 'yearPublished' ? parseInt(value, 10) : value
     }));
+    
+    // Clear API error when user makes changes
+    if (apiError) {
+      setApiError(null);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      addBook(bookData);
-      navigate('/');
+      try {
+        setLoading(true);
+        setApiError(null);
+        
+        // Clean ISBN before submitting
+        const bookWithCleanISBN = {
+          ...bookData,
+          isbn: bookData.isbn.replace(/[-\s]/g, '')
+        };
+        
+        await addBook(bookWithCleanISBN);
+        navigate('/');
+      } catch (error) {
+        console.error('Error adding book:', error);
+        setApiError(error instanceof Error ? error.message : 'Failed to add book');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -69,6 +99,22 @@ const AddBook: React.FC = () => {
   return (
     <PageContainer title="Add New Book">
       <FormContainer onSubmit={handleSubmit}>
+        {apiError && (
+          <div className="api-error-message">
+            {apiError}
+          </div>
+        )}
+        
+        <InputField
+          id="isbn"
+          name="isbn"
+          label="ISBN (13-digit)"
+          value={bookData.isbn}
+          onChange={handleChange}
+          error={errors.isbn}
+          required
+        />
+
         <InputField
           id="title"
           name="title"
@@ -114,7 +160,7 @@ const AddBook: React.FC = () => {
 
         <FormActions
           onCancel={handleCancel}
-          submitText="Add Book"
+          submitText={loading ? "Adding..." : "Add Book"}
         />
       </FormContainer>
     </PageContainer>
