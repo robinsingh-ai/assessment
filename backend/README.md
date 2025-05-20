@@ -17,6 +17,40 @@ The application uses a Singleton pattern for database operations. Data is stored
 
 Any changes made to the book collection (add, update, delete) are immediately saved to both the in-memory store and the JSON file.
 
+## Book Model
+
+Each book in the library has the following properties:
+
+- `id`: Unique identifier (generated automatically)
+- `isbn`: International Standard Book Number (13-digit ISBN)
+- `title`: Book title
+- `author`: Book author
+- `yearPublished`: Year the book was published
+- `genre`: Book genre
+
+## Middleware
+
+The application uses several middleware components for improved functionality:
+
+### Request Logger
+- Logs all incoming requests with method, URL, and timestamp
+- For POST and PUT requests, logs the request body
+- Logs response status code and request duration after completion
+
+### Validation Middleware
+- `validateBookData`: Validates book data for creation and updates
+  - Ensures ISBN is a valid 13-digit ISBN with correct check digit
+  - Ensures title, author, and genre are non-empty strings
+  - Validates that yearPublished is a valid number between 1000 and current year
+- `validateBookId`: Validates that book IDs in URL parameters are valid
+- `checkDuplicateISBN`: Prevents creating books with duplicate ISBNs
+- `checkDuplicateISBNOnUpdate`: Prevents updating a book with an ISBN that belongs to another book
+
+### Error Handling
+- Global error handler that catches and formats all errors
+- Custom ApiError class for consistent error responses
+- Proper HTTP status codes for different error types
+
 ## API Endpoints
 
 - `GET /books` - Retrieves all books
@@ -30,6 +64,7 @@ Any changes made to the book collection (add, update, delete) are immediately sa
 ```
 src/
 ├── controllers/      # Request handlers
+├── middleware/       # Middleware functions (validation, error handling, logging)
 ├── models/           # Data models and interfaces
 ├── routes/           # API routes
 ├── services/         # Business logic

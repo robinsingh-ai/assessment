@@ -6,6 +6,12 @@ import {
   updateBook, 
   deleteBook 
 } from '../controllers/bookController';
+import { 
+  validateBookData, 
+  validateBookId, 
+  checkDuplicateISBN,
+  checkDuplicateISBNOnUpdate
+} from '../middleware/bookValidation';
 
 const router = express.Router();
 
@@ -13,15 +19,15 @@ const router = express.Router();
 router.get('/', getAllBooks);
 
 // GET /books/:id - Retrieves a specific book
-router.get('/:id', getBookById);
+router.get('/:id', validateBookId, getBookById);
 
 // POST /books - Adds a new book
-router.post('/', createBook);
+router.post('/', validateBookData, checkDuplicateISBN, createBook);
 
 // PUT /books/:id - Updates an existing book
-router.put('/:id', updateBook);
+router.put('/:id', validateBookId, validateBookData, checkDuplicateISBNOnUpdate, updateBook);
 
 // DELETE /books/:id - Deletes a book
-router.delete('/:id', deleteBook);
+router.delete('/:id', validateBookId, deleteBook);
 
 export default router; 

@@ -5,7 +5,7 @@ import { Book } from '../models/Book';
 const DB_FILE_PATH = path.join(__dirname, '../../data/books.json');
 
 /**
- * Database (Singleton)
+ * Singleton Database Manager
  * Handles data persistence with JSON file
  */
 export class DbManager {
@@ -48,6 +48,7 @@ export class DbManager {
         const initialBooks: Book[] = [
           {
             id: '1',
+            isbn: '9780061120084',
             title: 'To Kill a Mockingbird',
             author: 'Harper Lee',
             yearPublished: 1960,
@@ -55,6 +56,7 @@ export class DbManager {
           },
           {
             id: '2',
+            isbn: '9780451524935',
             title: '1984',
             author: 'George Orwell',
             yearPublished: 1949,
@@ -62,6 +64,7 @@ export class DbManager {
           },
           {
             id: '3',
+            isbn: '9780743273565',
             title: 'The Great Gatsby',
             author: 'F. Scott Fitzgerald',
             yearPublished: 1925,
@@ -81,7 +84,7 @@ export class DbManager {
     } catch (error) {
       console.error('Error initializing database:', error);
       // If there's an error, start with an empty array
-      // this.books = [];
+      this.books = [];
     }
   }
 
@@ -111,6 +114,20 @@ export class DbManager {
   }
 
   /**
+   * Get a book by ISBN
+   */
+  public getBookByISBN(isbn: string): Book | undefined {
+    return this.books.find(book => book.isbn === isbn);
+  }
+
+  /**
+   * Check if a book with the given ISBN already exists
+   */
+  public isbnExists(isbn: string): boolean {
+    return this.books.some(book => book.isbn === isbn);
+  }
+
+  /**
    * Add a new book
    */
   public addBook(bookData: Omit<Book, 'id'>): Book {
@@ -133,6 +150,17 @@ export class DbManager {
     
     if (bookIndex === -1) {
       return null;
+    }
+    
+    // Check if ISBN is being changed and if it would conflict with another book
+    if (bookData.isbn !== this.books[bookIndex].isbn) {
+      const isbnExists = this.books.some(
+        (book, index) => index !== bookIndex && book.isbn === bookData.isbn
+      );
+      
+      if (isbnExists) {
+        return null;
+      }
     }
     
     const updatedBook: Book = {
