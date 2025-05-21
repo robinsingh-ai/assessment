@@ -1,21 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useBookStore } from '../../store/bookStore';
 import PageContainer from '../layout/PageContainer';
 import BookCard from './BookCard';
 import Button from '../common/Button';
 import './BookList.css';
 
+// Function to get query parameters from URL
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 // This will be a container component that manages state and logic
 const BookList: React.FC = () => {
   const navigate = useNavigate();
+  const query = useQuery();
+  const searchParam = query.get('search');
+  
   const { books, loading, error, fetchBooks, deleteBook } = useBookStore();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [filteredBooks, setFilteredBooks] = useState(books);
 
   // Fetch books on component mount
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
+
+  // Filter books when search parameter changes or books change
+  useEffect(() => {
+    if (searchParam && books.length > 0) {
+      const searchTerm = searchParam.toLowerCase();
+      const filtered = books.filter(book => 
+        book.title.toLowerCase().includes(searchTerm) ||
+        book.author.toLowerCase().includes(searchTerm) ||
+        book.genre.toLowerCase().includes(searchTerm) ||
+        book.isbn.toLowerCase().includes(searchTerm)
+      );
+      setFilteredBooks(filtered);
+    } else {
+      setFilteredBooks(books);
+    }
+  }, [searchParam, books]);
 
   const handleEdit = (id: string) => {
     navigate(`/edit/${id}`);
@@ -36,7 +61,7 @@ const BookList: React.FC = () => {
   };
 
   return (
-    <PageContainer title="Library Management System">
+    <PageContainer title={searchParam ? `Search Results: ${searchParam}` : "Library Management System"}>
       <div className="actions">
         <Button onClick={() => navigate('/add')}>Add New Book</Button>
       </div>
@@ -45,12 +70,16 @@ const BookList: React.FC = () => {
       
       {error && <div className="error-message">Error: {error}</div>}
       
-      {!loading && books.length === 0 && (
-        <div className="empty-state">No books found. Add some books to get started!</div>
+      {!loading && filteredBooks.length === 0 && (
+        <div className="empty-state">
+          {searchParam 
+            ? `No books found matching "${searchParam}". Try a different search term.` 
+            : "No books found. Add some books to get started!"}
+        </div>
       )}
       
       <div className="book-grid">
-        {books.map(book => (
+        {filteredBooks.map(book => (
           <BookCard
             key={book.id}
             book={book}

@@ -16,11 +16,11 @@
     "genre": "Dystopian"
   },
   {
-    "id": "3",
-    "isbn": "9780743273565",
+    "isbn": "9780743273564",
     "title": "The Great Gatsby",
     "author": "F. Scott Fitzgerald",
     "yearPublished": 1925,
-    "genre": "Classic"
+    "genre": "Classic",
+    "id": "3"
   }
 ]

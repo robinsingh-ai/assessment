@@ -43,6 +43,7 @@ const NavMenu: React.FC<{ isOpen: boolean; onSearchToggle: () => void }> = ({ is
       <NavMenuItem 
         title="Find, Borrow, Request"
         links={[
+          { to: "/", text: "Home" },
           { to: "/books", text: "Browse Books" },
           { to: "/new-arrivals", text: "New Arrivals" },
           { to: "/popular", text: "Popular Titles" }
