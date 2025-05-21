@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import routes from './routes';
-import Navbar from './components/layout/Navbar';
+import Navbar from './components/navbar/Navbar';
 import './App.css';
 
 const AppContent: React.FC = () => {

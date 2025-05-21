@@ -21,11 +21,12 @@
 .navbar-logo {
   flex: 0 0 auto;
   margin-right: auto;
+ 
 }
 
 .navbar-logo a {
   text-decoration: none;
-  color: var(--text-light);
+  
   display: flex;
   align-items: center;
 }
@@ -34,6 +35,7 @@
   font-size: var(--font-size-large);
   margin: 0;
   font-weight: var(--font-weight-bold);
+  color: var(--accent-light)!important;
 }
 
 /* Navigation menu - Middle */
