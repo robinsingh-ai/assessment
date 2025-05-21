@@ -5,18 +5,24 @@ import FormActions from './FormActions';
 
 // Mock the Button component
 jest.mock('../common/Button', () => ({ 
-  children, onClick, type, variant 
+  children, onClick, type, variant, icon, iconPosition, size, disabled, loading
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
   variant: string;
+  icon?: React.ReactNode;
+  iconPosition?: string;
+  size?: string;
+  disabled?: boolean;
+  loading?: boolean;
 }) => (
   <button 
     onClick={onClick} 
     type={type} 
     className={`button ${variant}`}
     data-testid={`${variant}-button`}
+    disabled={disabled}
   >
     {children}
   </button>
@@ -52,10 +58,16 @@ describe('FormActions Component', () => {
     expect(screen.getByTestId('primary-button')).toHaveTextContent('Submit');
   });
 
-  test('renders cancel button with secondary variant', () => {
+  test('renders cancel button with outline variant', () => {
     render(<FormActions onCancel={() => {}} />);
     
-    expect(screen.getByTestId('secondary-button')).toBeInTheDocument();
-    expect(screen.getByTestId('secondary-button')).toHaveTextContent('Cancel');
+    expect(screen.getByTestId('outline-button')).toBeInTheDocument();
+    expect(screen.getByTestId('outline-button')).toHaveTextContent('Cancel');
+  });
+  
+  test('disables buttons when isSubmitting is true', () => {
+    render(<FormActions onCancel={() => {}} isSubmitting={true} />);
+    
+    expect(screen.getByTestId('outline-button')).toBeDisabled();
   });
 }); 
