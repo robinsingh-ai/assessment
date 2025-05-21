@@ -11,7 +11,6 @@
 
 .navbar-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
@@ -21,7 +20,7 @@
 /* Logo styles - Left side */
 .navbar-logo {
   flex: 0 0 auto;
-  margin-right: var(--spacing-lg);
+  margin-right: auto;
 }
 
 .navbar-logo a {
@@ -40,14 +39,14 @@
 /* Navigation menu - Middle */
 .navbar-menu {
   display: flex;
-  gap: var(--spacing-lg);
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .navbar-item {
   position: relative;
-  padding: var(--spacing-sm) 0;
+  padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
   font-weight: var(--font-weight-medium);
 }
@@ -58,6 +57,8 @@
   transition: background-color var(--transition-fast);
   color: var(--text-light);
   display: block;
+  white-space: nowrap;
+  text-decoration: none;
 }
 
 .dropdown-toggle:hover {
@@ -105,7 +106,7 @@
   display: flex;
   align-items: center;
   flex: 0 0 auto;
-  margin-left: var(--spacing-lg);
+  margin-left: auto;
 }
 
 .navbar-search form {
@@ -184,10 +185,6 @@
   .search-input {
     min-width: 180px;
   }
-  
-  .navbar-menu {
-    gap: var(--spacing-md);
-  }
 }
 
 @media (max-width: 768px) {
@@ -203,6 +200,7 @@
   .navbar-logo {
     flex: 1;
     order: 1;
+    margin-right: 0;
   }
   
   .navbar-search {
@@ -213,11 +211,11 @@
   .navbar-menu {
     flex-basis: 100%;
     flex-direction: column;
-    gap: 0;
     max-height: 0;
     overflow: hidden;
     transition: max-height var(--transition-normal);
     order: 4;
+    margin: 0;
   }
   
   .navbar-menu.active {
@@ -228,6 +226,7 @@
   .navbar-item {
     width: 100%;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
   }
   
   .dropdown-toggle {

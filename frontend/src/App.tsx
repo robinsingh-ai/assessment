@@ -14,7 +14,9 @@ const App: React.FC = () => {
     <div className="App">
       <Router>
         <Navbar onSearch={handleSearch} />
-        <div className="content-container">
+       
+
+          <div className="content-container">
           <Routes>
             {routes.map((route) => (
               <Route
@@ -24,6 +26,7 @@ const App: React.FC = () => {
               />
             ))}
           </Routes>
+         
         </div>
       </Router>
     </div>
