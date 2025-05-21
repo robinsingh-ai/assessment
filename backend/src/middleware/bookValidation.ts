@@ -16,6 +16,16 @@ export const validateBookData = (req: Request, res: Response, next: NextFunction
     if (!isbn || typeof isbn !== 'string') {
       throw new ApiError(400, 'ISBN is required and must be a string');
     }
+
+    const trimmedIsbn = isbn.trim();
+
+    if (!/^\d+$/.test(trimmedIsbn)) {
+      throw new ApiError(400, 'ISBN must contain only numeric characters');
+    }
+
+    if (trimmedIsbn.length !== 13) {
+      throw new ApiError(400, 'ISBN must be 13 digits long');
+    }
     
     // Check required fields
     if (!title || typeof title !== 'string' || title.trim() === '') {
