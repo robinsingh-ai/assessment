@@ -14,9 +14,9 @@ const FormContainer: React.FC<FormContainerProps> = ({
 }) => {
   return (
     <div className="form-container">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} data-testid="form-element">
         {instructions && (
-          <div className="form-container-instructions">
+          <div className="form-container-instructions" data-testid="form-instructions">
             {instructions}
           </div>
         )}
