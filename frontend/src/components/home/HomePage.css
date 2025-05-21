@@ -98,12 +98,12 @@
 
 .search-input:focus {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: white; /* Ensure white background when focused */
+  background-color: white; 
 }
 
 /* Custom styling for the search button (overrides some Button component styles) */
 .search-button {
-  border-radius: 0 8px 8px 0 !important;
+  border-radius: 99px !important;
   margin: 0 !important;
   height: 100%;
   z-index: 2; /* Ensure button stays on top */
