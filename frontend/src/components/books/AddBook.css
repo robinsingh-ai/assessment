@@ -72,4 +72,23 @@
 
 .form-actions button:first-child:hover {
   background-color: #7f8c8d;
-} 
+}
+
+.api-error-message {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: var(--error-color);
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--error-color);
+  display: flex;
+  align-items: center;
+}
+
+.api-error-message::before {
+  content: "⚠️";
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Add Book specific styles, shared styles are now in form components */ 

@@ -48,16 +48,9 @@ const HomePage: React.FC = () => {
             onClick={() => navigateToSection('/books')}
           >
             <span className="icon">📚</span>
-            <span>A-Z Databases</span>
+            <span>All Books</span>
           </button>
           
-          <button 
-            className="quick-link-button"
-            onClick={() => navigateToSection('/study-rooms')}
-          >
-            <span className="icon">🏛️</span>
-            <span>Group Study Rooms</span>
-          </button>
           
           <button 
             className="quick-link-button"
@@ -76,15 +69,7 @@ const HomePage: React.FC = () => {
           </button>
         </div>
         
-        <div className="library-hours-container">
-          <button 
-            className="quick-link-button library-hours-button"
-            onClick={() => navigateToSection('/hours')}
-          >
-            <span className="icon">⏰</span>
-            <span>Library Hours</span>
-          </button>
-        </div>
+        
       </div>
     </div>
   );

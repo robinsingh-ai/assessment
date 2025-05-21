@@ -12,6 +12,11 @@ interface InputFieldProps {
   max?: string | number;
   error?: string;
   required?: boolean;
+  placeholder?: string;
+  pattern?: string;
+  validateOnBlur?: boolean;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  description?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -25,7 +30,21 @@ const InputField: React.FC<InputFieldProps> = ({
   max,
   error,
   required = false,
+  placeholder,
+  pattern,
+  validateOnBlur = false,
+  onBlur,
+  description,
 }) => {
+  const errorId = `${id}-error`;
+  const descriptionId = description ? `${id}-description` : undefined;
+  
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(e);
+    }
+  };
+
   return (
     <div className="form-group">
       <label htmlFor={id}>
@@ -38,12 +57,22 @@ const InputField: React.FC<InputFieldProps> = ({
         name={name}
         value={value}
         onChange={onChange}
+        onBlur={handleBlur}
         min={min}
         max={max}
+        pattern={pattern}
         className={error ? 'error-input' : ''}
         required={required}
+        placeholder={placeholder}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={`${error ? errorId : ''} ${descriptionId || ''}`}
       />
-      {error && <span className="error">{error}</span>}
+      {description && (
+        <div id={descriptionId} className="input-description">
+          {description}
+        </div>
+      )}
+      {error && <span className="error" id={errorId}>{error}</span>}
     </div>
   );
 };

@@ -5,13 +5,13 @@
   display: grid;
   grid-template-rows: auto 1fr;
   min-height: calc(100vh - 70px); /* Adjust based on your navbar height */
-  background-color: #f0f2f5;
+  background-color: var(--background-light);
 }
 
 /* Search Primo Section */
 .search-primo-container {
-  background-color: #1e3a8a; 
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-light);
   padding: 3rem 2rem;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
 .search-primo-container h1 {
   margin-bottom: 1.5rem;
   font-size: 2rem;
-  color: white;
+  color: var(--text-light);
   font-weight: 600;
 }
 
@@ -49,8 +49,8 @@
 }
 
 .search-button-home {
-  background-color: #f8b84e; /* Golden yellow */
-  color: #333;
+  background-color: var(--accent-color);
+  color: var(--text-dark);
   border: none;
   padding: 0 1.5rem;
   border-radius: 0 4px 4px 0;
@@ -61,8 +61,8 @@
   white-space: nowrap;
 }
 
-.search-button:hover {
-  background-color: #f0ad4e;
+.search-button-home:hover {
+  background-color: var(--accent-dark);
 }
 
 /* Quick Links Section */
@@ -89,8 +89,8 @@
 }
 
 .quick-link-button {
-  background-color: #f8b84e; /* Golden yellow */
-  color: #333;
+  background-color: var(--accent-color);
+  color: var(--text-dark);
   border: none;
   border-radius: 2rem;
   padding: 1rem 1.5rem;
@@ -106,7 +106,7 @@
 }
 
 .quick-link-button:hover {
-  background-color: #f0ad4e;
+  background-color: var(--accent-dark);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -137,7 +137,7 @@
     width: 100%;
   }
   
-  .search-button {
+  .search-button-home {
     border-radius: 4px;
     padding: 0.8rem;
     width: 100%;

@@ -6,7 +6,7 @@
 .book-list-container h1 {
   margin-bottom: 20px;
   text-align: center;
-  color: #2c3e50;
+  color: var(--text-dark);
 }
 
 .actions {
@@ -72,4 +72,48 @@
 
 .book-actions button:last-child:hover {
   background-color: #c0392b;
+}
+
+.no-books-message {
+  text-align: center;
+  margin: 40px 0;
+  color: var(--text-dark);
+  font-size: 1.2rem;
+}
+
+.search-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(26, 86, 219, 0.2);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .book-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actions {
+    justify-content: center;
+  }
+  
+  .search-container {
+    flex-direction: column;
+  }
 } 

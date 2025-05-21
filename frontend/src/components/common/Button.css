@@ -5,31 +5,32 @@
   border-radius: 4px;
   font-size: 14px;
   transition: background-color 0.3s;
+  font-weight: 500;
 }
 
 .button.primary {
-  background-color: #3498db;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-light);
 }
 
 .button.primary:hover {
-  background-color: #2980b9;
+  background-color: var(--primary-dark);
 }
 
 .button.secondary {
-  background-color: #95a5a6;
-  color: white;
+  background-color: var(--background-dark);
+  color: var(--text-light);
 }
 
 .button.secondary:hover {
-  background-color: #7f8c8d;
+  background-color: var(--text-dark);
 }
 
 .button.danger {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--error-color);
+  color: var(--text-light);
 }
 
 .button.danger:hover {
-  background-color: #c0392b;
+  background-color: #b91c1c; /* Darker red */
 } 
