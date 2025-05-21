@@ -16,7 +16,7 @@ const AppContent: React.FC = () => {
   return (
     <>
       <Navbar onSearch={handleSearch} />
-      <div className="content-container">
+      <div className="content-container" data-testid="content-container">
         <Routes>
           {routes.map((route) => (
             <Route

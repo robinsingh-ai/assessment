@@ -6,6 +6,11 @@ import FormActions from './FormActions';
 // Mock the Button component
 jest.mock('../common/Button', () => ({ 
   children, onClick, type, variant 
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
+  variant: string;
 }) => (
   <button 
     onClick={onClick} 
@@ -43,14 +48,14 @@ describe('FormActions Component', () => {
   test('renders submit button with primary variant', () => {
     render(<FormActions onCancel={() => {}} />);
     
-    const submitButton = screen.getByText('Submit');
-    expect(submitButton.closest('[data-testid="primary-button"]')).toBeInTheDocument();
+    expect(screen.getByTestId('primary-button')).toBeInTheDocument();
+    expect(screen.getByTestId('primary-button')).toHaveTextContent('Submit');
   });
 
   test('renders cancel button with secondary variant', () => {
     render(<FormActions onCancel={() => {}} />);
     
-    const cancelButton = screen.getByText('Cancel');
-    expect(cancelButton.closest('[data-testid="secondary-button"]')).toBeInTheDocument();
+    expect(screen.getByTestId('secondary-button')).toBeInTheDocument();
+    expect(screen.getByTestId('secondary-button')).toHaveTextContent('Cancel');
   });
 }); 
