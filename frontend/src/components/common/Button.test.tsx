@@ -12,13 +12,13 @@ describe('Button Component', () => {
   test('applies the correct variant class', () => {
     render(<Button variant="secondary">Secondary Button</Button>);
     const button = screen.getByRole('button', { name: /secondary button/i });
-    expect(button).toHaveClass('secondary');
+    expect(button).toHaveClass('button--secondary');
   });
 
   test('has primary class by default', () => {
     render(<Button>Default Button</Button>);
     const button = screen.getByRole('button', { name: /default button/i });
-    expect(button).toHaveClass('primary');
+    expect(button).toHaveClass('button--primary');
   });
 
   test('calls onClick handler when clicked', () => {
@@ -39,5 +39,43 @@ describe('Button Component', () => {
     render(<Button className="custom-class">Custom Button</Button>);
     const button = screen.getByRole('button', { name: /custom button/i });
     expect(button).toHaveClass('custom-class');
+  });
+
+  test('applies the correct size class', () => {
+    render(<Button size="lg">Large Button</Button>);
+    const button = screen.getByRole('button', { name: /large button/i });
+    expect(button).toHaveClass('button--lg');
+  });
+
+  test('applies full width class when fullWidth is true', () => {
+    render(<Button fullWidth>Full Width Button</Button>);
+    const button = screen.getByRole('button', { name: /full width button/i });
+    expect(button).toHaveClass('button--full-width');
+  });
+
+  test('applies rounded class when rounded is true', () => {
+    render(<Button rounded>Rounded Button</Button>);
+    const button = screen.getByRole('button', { name: /rounded button/i });
+    expect(button).toHaveClass('button--rounded');
+  });
+
+  test('applies disabled class and attribute when disabled is true', () => {
+    render(<Button disabled>Disabled Button</Button>);
+    const button = screen.getByRole('button', { name: /disabled button/i });
+    expect(button).toHaveClass('button--disabled');
+    expect(button).toBeDisabled();
+  });
+
+  test('adds loading spinner when loading is true', () => {
+    render(<Button loading>Loading Button</Button>);
+    const button = screen.getByRole('button', { name: /loading button/i });
+    expect(button).toHaveClass('button--loading');
+    expect(button.querySelector('.button__spinner')).toBeInTheDocument();
+  });
+
+  test('renders icon correctly', () => {
+    const TestIcon = () => <span data-testid="test-icon">Icon</span>;
+    render(<Button icon={<TestIcon />}>Button with Icon</Button>);
+    expect(screen.getByTestId('test-icon')).toBeInTheDocument();
   });
 }); 

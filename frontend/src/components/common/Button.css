@@ -1,36 +1,217 @@
+/* Base Button Styles */
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
   font-weight: 500;
+  line-height: 1.5;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  gap: 0.5rem;
+  white-space: nowrap;
+  text-decoration: none;
 }
 
-.button.primary {
+/* Sizes */
+.button--sm {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 0.2rem;
+}
+
+.button--md {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.button--lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 0.3rem;
+}
+
+/* Variants */
+.button--primary {
   background-color: var(--primary-color);
   color: var(--text-light);
 }
 
-.button.primary:hover {
+.button--primary:hover:not(.button--disabled):not(.button--loading) {
   background-color: var(--primary-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
-.button.secondary {
+.button--primary:active:not(.button--disabled):not(.button--loading) {
+  background-color: var(--primary-dark);
+  transform: translateY(0);
+}
+
+.button--secondary {
   background-color: var(--background-dark);
   color: var(--text-light);
 }
 
-.button.secondary:hover {
+.button--secondary:hover:not(.button--disabled):not(.button--loading) {
   background-color: var(--text-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
-.button.danger {
+.button--secondary:active:not(.button--disabled):not(.button--loading) {
+  background-color: var(--text-dark);
+  transform: translateY(0);
+}
+
+.button--danger {
   background-color: var(--error-color);
   color: var(--text-light);
 }
 
-.button.danger:hover {
+.button--danger:hover:not(.button--disabled):not(.button--loading) {
   background-color: #b91c1c; /* Darker red */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.button--danger:active:not(.button--disabled):not(.button--loading) {
+  background-color: #991b1b; /* Even darker red */
+  transform: translateY(0);
+}
+
+.button--success {
+  background-color: #22c55e; /* Success green */
+  color: var(--text-light);
+}
+
+.button--success:hover:not(.button--disabled):not(.button--loading) {
+  background-color: #16a34a; /* Darker green */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.button--success:active:not(.button--disabled):not(.button--loading) {
+  background-color: #15803d; /* Even darker green */
+  transform: translateY(0);
+}
+
+.button--text {
+  background-color: transparent;
+  color: var(--primary-color);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.button--text:hover:not(.button--disabled):not(.button--loading) {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--primary-dark);
+}
+
+.button--outline {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.button--outline:hover:not(.button--disabled):not(.button--loading) {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+/* States */
+.button--disabled, .button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.button--full-width {
+  width: 100%;
+}
+
+.button--rounded {
+  border-radius: 9999px; /* Very large value for fully rounded corners */
+}
+
+/* Loading Animation */
+.button--loading {
+  cursor: wait;
+}
+
+.button--loading .button__text {
+  opacity: 0.7;
+}
+
+.button__spinner {
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  left: calc(50% - 0.625rem);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--text-light);
+  animation: button-spinner 0.8s linear infinite;
+}
+
+@keyframes button-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Icon Positioning */
+.button__icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.2em;
+}
+
+.button__icon--left {
+  margin-right: 0.25rem;
+}
+
+.button__icon--right {
+  margin-left: 0.25rem;
+}
+
+/* Focus State (Accessibility) */
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.25);
+}
+
+/* For when icon is the only content */
+.button--icon-only {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.button--icon-only.button--sm {
+  padding: 0.25rem;
+}
+
+.button--icon-only.button--lg {
+  padding: 0.75rem;
+}
+
+/* Media queries for responsive buttons */
+@media (max-width: 768px) {
+  .button--responsive {
+    width: 100%;
+  }
+  
+  .button--responsive .button__text {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 } 

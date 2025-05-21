@@ -233,6 +233,7 @@ const AddBook: React.FC = () => {
         <FormActions
           onCancel={handleCancel}
           submitText={loading ? "Adding..." : "Add Book"}
+          isSubmitting={loading}
         />
       </FormContainer>
     </PageContainer>

@@ -76,9 +76,9 @@
   transition: all 0.3s ease;
 }
 
+/* Remove the transform from the wrapper so it doesn't affect the button */
 .search-input-wrapper:focus-within {
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
 }
 
 .search-form {
@@ -96,30 +96,36 @@
   transition: all 0.3s ease;
 }
 
-.search-button-home {
-  background-color: var(--accent-color);
-  color: var(--text-dark);
-  border: none;
-  padding: 0 1.8rem;
-  border-radius: 0 8px 8px 0;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 1.1rem;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+.search-input:focus {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  background-color: white; /* Ensure white background when focused */
 }
 
-.search-icon {
-  font-size: 1.2rem;
+/* Custom styling for the search button (overrides some Button component styles) */
+.search-button {
+  border-radius: 0 8px 8px 0 !important;
+  margin: 0 !important;
+  height: 100%;
+  z-index: 2; /* Ensure button stays on top */
 }
 
-.search-button-home:hover {
-  background-color: var(--accent-dark);
-  transform: translateX(2px);
+/* Preserve button styling even when input is focused */
+.search-input-wrapper:focus-within .search-button {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Custom hover state for the search button */
+.search-button:hover {
+  background-color: #ffc107 !important; /* Bright yellow */
+  color: white !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove default transform effects on hover for search button */
+.search-button:hover .button__icon {
+  color: white !important;
 }
 
 /* Features Section */
@@ -247,26 +253,6 @@
   margin: 0;
 }
 
-.contact-button {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.95rem;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.contact-button:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 /* Animations */
 @keyframes fadeInDown {
   from {
@@ -317,11 +303,9 @@
     width: 100%;
   }
   
-  .search-button-home {
-    border-radius: 8px;
-    padding: 1rem;
+  .search-button {
+    border-radius: 8px !important;
     width: 100%;
-    justify-content: center;
   }
   
   .features-section {
@@ -341,10 +325,6 @@
   
   .info-content {
     margin-bottom: 1rem;
-  }
-  
-  .contact-button {
-    width: 100%;
   }
 }
 

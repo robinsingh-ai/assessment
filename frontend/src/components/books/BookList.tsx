@@ -6,6 +6,13 @@ import BookCard from './BookCard';
 import Button from '../common/Button';
 import './BookList.css';
 
+// Add Book icon
+const AddBookIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+  </svg>
+);
+
 // Function to get query parameters from URL
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -63,7 +70,15 @@ const BookList: React.FC = () => {
   return (
     <PageContainer title={searchParam ? `Search Results: ${searchParam}` : "Library Management System"}>
       <div className="actions">
-        <Button onClick={() => navigate('/add')}>Add New Book</Button>
+        <Button 
+          variant="success" 
+          size="md" 
+          onClick={() => navigate('/add')}
+          icon={<AddBookIcon />}
+          iconPosition="left"
+        >
+          Add New Book
+        </Button>
       </div>
 
       {loading && !isDeleting && <div className="loading">Loading books...</div>}
