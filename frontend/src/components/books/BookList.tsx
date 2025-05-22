@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useBookStore } from '../../store/bookStore';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageContainer from '../layout/PageContainer';
 import BookCard from './BookCard';
 import Button from '../common/Button';
+import { useBookSearch } from '../../hooks/useBookSearch';
+import { useBookActions } from '../../hooks/useBookActions';
+import { useBookData } from '../../hooks/useBookData';
 import './BookList.css';
 
 // Add Book icon
@@ -13,58 +15,15 @@ const AddBookIcon = () => (
   </svg>
 );
 
-// Function to get query parameters from URL
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 // This will be a container component that manages state and logic
 const BookList: React.FC = () => {
   const navigate = useNavigate();
-  const query = useQuery();
-  const searchParam = query.get('search');
-  
-  const { books, loading, error, fetchBooks, deleteBook } = useBookStore();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [filteredBooks, setFilteredBooks] = useState(books);
-
-  // Fetch books on component mount
-  useEffect(() => {
-    fetchBooks();
-  }, [fetchBooks]);
-
-  // Filter books when search parameter changes or books change
-  useEffect(() => {
-    if (searchParam && books.length > 0) {
-      const searchTerm = searchParam.toLowerCase();
-      const filtered = books.filter(book => 
-        book.title.toLowerCase().includes(searchTerm) ||
-        book.author.toLowerCase().includes(searchTerm) ||
-        book.genre.toLowerCase().includes(searchTerm) ||
-        book.isbn.toLowerCase().includes(searchTerm)
-      );
-      setFilteredBooks(filtered);
-    } else {
-      setFilteredBooks(books);
-    }
-  }, [searchParam, books]);
+  const { books, loading, error } = useBookData();
+  const { searchParam, filteredBooks } = useBookSearch({ books });
+  const { isDeleting, deleteError, handleDeleteBook } = useBookActions();
 
   const handleEdit = (id: string) => {
     navigate(`/edit/${id}`);
-  };
-
-  const handleDelete = async (id: string, title: string) => {
-    if (window.confirm(`Are you sure you want to delete ${title}?`)) {
-      try {
-        setIsDeleting(true);
-        await deleteBook(id);
-      } catch (error) {
-        console.error('Error deleting book:', error);
-        alert('Failed to delete book. Please try again.');
-      } finally {
-        setIsDeleting(false);
-      }
-    }
   };
 
   return (
@@ -83,7 +42,11 @@ const BookList: React.FC = () => {
 
       {loading && !isDeleting && <div className="loading">Loading books...</div>}
       
-      {error && <div className="error-message">Error: {error}</div>}
+      {(error || deleteError) && (
+        <div className="error-message">
+          Error: {error || deleteError}
+        </div>
+      )}
       
       {!loading && filteredBooks.length === 0 && (
         <div className="empty-state">
@@ -99,7 +62,7 @@ const BookList: React.FC = () => {
             key={book.id}
             book={book}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            onDelete={handleDeleteBook}
           />
         ))}
       </div>
