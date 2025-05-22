@@ -3,12 +3,13 @@ import { BookService } from '../services/bookService';
 import { Book } from '../models/Book';
 import { ApiError } from '../middleware/errorHandler';
 
-const bookService = new BookService();
+// Export the service for testing purposes
+export const bookService = new BookService();
 
 // Get all books
-export const getAllBooks = (req: Request, res: Response, next: NextFunction): void => {
+export const getAllBooks = (req: Request, res: Response, next: NextFunction, serviceInstance = bookService): void => {
   try {
-    const books = bookService.getAllBooks();
+    const books = serviceInstance.getAllBooks();
     res.status(200).json(books);
   } catch (error) {
     next(error);
@@ -16,10 +17,10 @@ export const getAllBooks = (req: Request, res: Response, next: NextFunction): vo
 };
 
 // Get a book by id
-export const getBookById = (req: Request, res: Response, next: NextFunction): void => {
+export const getBookById = (req: Request, res: Response, next: NextFunction, serviceInstance = bookService): void => {
   try {
     const { id } = req.params;
-    const book = bookService.getBookById(id);
+    const book = serviceInstance.getBookById(id);
     
     if (!book) {
       throw new ApiError(404, 'Book not found');
@@ -32,10 +33,10 @@ export const getBookById = (req: Request, res: Response, next: NextFunction): vo
 };
 
 // Create a new book
-export const createBook = (req: Request, res: Response, next: NextFunction): void => {
+export const createBook = (req: Request, res: Response, next: NextFunction, serviceInstance = bookService): void => {
   try {
     const bookData: Omit<Book, 'id'> = req.body;
-    const newBook = bookService.createBook(bookData);
+    const newBook = serviceInstance.createBook(bookData);
     res.status(201).json(newBook);
   } catch (error) {
     next(error);
@@ -43,12 +44,12 @@ export const createBook = (req: Request, res: Response, next: NextFunction): voi
 };
 
 // Update a book
-export const updateBook = (req: Request, res: Response, next: NextFunction): void => {
+export const updateBook = (req: Request, res: Response, next: NextFunction, serviceInstance = bookService): void => {
   try {
     const { id } = req.params;
     const bookData: Omit<Book, 'id'> = req.body;
     
-    const updatedBook = bookService.updateBook(id, bookData);
+    const updatedBook = serviceInstance.updateBook(id, bookData);
     
     if (!updatedBook) {
       throw new ApiError(404, 'Book not found');
@@ -61,10 +62,10 @@ export const updateBook = (req: Request, res: Response, next: NextFunction): voi
 };
 
 // Delete a book
-export const deleteBook = (req: Request, res: Response, next: NextFunction): void => {
+export const deleteBook = (req: Request, res: Response, next: NextFunction, serviceInstance = bookService): void => {
   try {
     const { id } = req.params;
-    const deleted = bookService.deleteBook(id);
+    const deleted = serviceInstance.deleteBook(id);
     
     if (!deleted) {
       throw new ApiError(404, 'Book not found');

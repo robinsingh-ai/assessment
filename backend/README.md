@@ -98,4 +98,5 @@ The server will be running at http://localhost:5000
 - `npm run dev` - Starts the development server with hot-reloading
 - `npm run build` - Builds the project for production
 - `npm start` - Runs the production build
-- `npm run watch` - Watches for changes and rebuilds 
+- `npm run watch` - Watches for changes and rebuilds
+
