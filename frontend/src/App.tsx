@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import routes from './routes';
 import Navbar from './components/navbar/Navbar';
+import MobileBottomNav from './components/layout/MobileBottomNav';
 import './App.css';
 
 const AppContent: React.FC = () => {
@@ -27,6 +28,7 @@ const AppContent: React.FC = () => {
           ))}
         </Routes>
       </div>
+      <MobileBottomNav />
     </>
   );
 };
