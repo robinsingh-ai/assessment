@@ -1,46 +1,101 @@
-# Getting Started with Create React App
+# Book Management System - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend application for the Book Management System, a React-based web application for managing a collection of books. The application allows users to view, search, add, edit, and delete books.
 
-## Available Scripts
+## Project Overview
 
-In the project directory, you can run:
+This frontend application is built with:
+- React with TypeScript
+- React Router for navigation
+- CSS for styling (with a responsive design)
+- Custom hooks for state management and API communication
 
-### `npm start`
+The application features:
+- Responsive design that works on both desktop and mobile devices
+- Book listing with search and filtering capabilities
+- Forms for adding and editing books
+- Navigation system with search functionality
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Project Structure
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This frontend application is organized into the following structure:
 
-### `npm test`
+### Core Files
+- `src/index.tsx` - The entry point of the application
+- `src/App.tsx` - The main App component that sets up routing with React Router and includes:
+  - Navbar component for navigation
+  - Content container for route components
+  - MobileBottomNav for mobile navigation
+- `src/App.css` - Main application styles
+- `src/index.css` - Global CSS styles
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Components
+The components are organized by feature in the `src/components` directory:
 
-### `npm run build`
+#### Books Components
+- `BookList.tsx` - Displays a list of books with search and filtering capabilities
+- `BookCard.tsx` - Card component to display individual book information
+- `AddBook.tsx` - Component for adding a new book
+- `EditBook.tsx` - Component for editing an existing book
+- `BookForm.tsx` - Reusable form component used by both Add and Edit book components
+- `BookFormFields.tsx` - Form field definitions for book data entry
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Common Components
+- `Button.tsx` - Reusable button component with various styles and states
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Navbar Components
+- `Navbar.tsx` - Main navigation bar component
+- `NavMenu.tsx` - Navigation menu component
+- `NavMenuItem.tsx` - Individual navigation menu item
+- `NavSearch.tsx` - Search component in the navigation bar
+- `NavbarLogo.tsx` - Logo component for the navigation bar
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Layout Components
+Contains layout-related components like containers and grid systems
+- `MobileBottomNav.tsx` - Mobile navigation bar that appears at the bottom of the screen on small devices
+- `PageContainer.tsx` - Container component for consistent page layout
 
-### `npm run eject`
+#### Forms Components
+Contains form-related components and utilities
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Home Components
+Components specific to the home page
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Routes
+- `src/routes/index.tsx` - Defines the application routing with the following paths:
+  - `/` - Home page
+  - `/books` - Book listing page
+  - `/add` - Add new book page
+  - `/edit/:id` - Edit book page with dynamic ID parameter
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Services
+- `src/services/api.ts` - API service for backend communication with the following methods:
+  - `getAllBooks()` - Fetches all books from the API
+  - `getBookById(id)` - Fetches a specific book by ID
+  - `createBook(book)` - Creates a new book
+  - `updateBook(id, book)` - Updates an existing book
+  - `deleteBook(id)` - Deletes a book by ID
+- `src/services/api.test.ts` - Tests for the API service
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Other Directories
 
-## Learn More
+#### Hooks
+- `useBookData.ts` - Hook for accessing and managing book data
+- `useBookActions.ts` - Hook for book-related actions (create, update, delete)
+- `useBookSearch.ts` - Hook for book search functionality
+- `useBookForm.ts` - Hook for managing book form state and validation
+- `useApi.ts` - Hook for making API calls
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Types
+- `index.ts` - Contains TypeScript interfaces including the Book interface
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Store
+- `bookStore.ts` - State management for books using Zustand
+- `bookStore.test.ts` - Tests for the book store
+
+## Getting Started with Development
+
+1. Clone the repository
+2. Run `npm install` or `yarn` to install dependencies
+3. Run `npm start` or `yarn start` to start the development server
+4. Open [http://localhost:3000](http://localhost:3000) to view the application
